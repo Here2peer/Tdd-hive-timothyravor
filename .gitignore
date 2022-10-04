@@ -107,7 +107,7 @@ buildNumber.properties
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
-
+Tdd-hive-timothyravor.iml
 ### SonarQube ###
 # SonarQube ignore files.
 #
