@@ -122,3 +122,4 @@ Tdd-hive-timothyravor.iml
 .sonarlint/
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij+all,maven,sonarqube
+/tdd-opdracht.iml
