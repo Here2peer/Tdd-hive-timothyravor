@@ -13,10 +13,12 @@ public class Piece {
 
     }
 
-    public Piece(int x, int y, String type) {
-        this.x = x;
-        this.y = y;
+    public Piece(Enum type) {
         this.type = type;
+    }
+
+    public Enum getType() {
+        return type;
     }
 
     @Override
