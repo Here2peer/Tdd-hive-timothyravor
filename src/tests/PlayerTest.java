@@ -33,5 +33,9 @@ public class PlayerTest {
         Assertions.assertEquals( Hive.Tile.QUEEN_BEE, player1.getPlacablePiece(Hive.Tile.QUEEN_BEE).getType());
     }
 
+    @Test
+    public void PlayerWhiteStarts() {
+        Assertions.assertTrue(player1.isMyTurn());
+    }
 
 }

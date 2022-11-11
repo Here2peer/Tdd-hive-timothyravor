@@ -3,6 +3,7 @@ package tests;
 import classes.Board;
 import classes.Piece;
 import interfaces.Hive;
+import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,8 +21,8 @@ public class BoardTest {
     @BeforeEach
     public void CreateNewBoardBeforeEachTest() {
         board = new Board();
-        piece1 = new Piece(Hive.Tile.BEETLE);
-        piece2 = new Piece(Hive.Tile.BEETLE);
+        piece1 = new Piece(Hive.Tile.BEETLE, Hive.Player.WHITE);
+        piece2 = new Piece(Hive.Tile.GRASSHOPPER, Hive.Player.WHITE);
     }
 
     @Test
@@ -38,7 +39,7 @@ public class BoardTest {
 
     @Test
     public void NoTilePlaceOnCoordsThrowsException() {
-        Assertions.assertThrows(Hive.IllegalMove.class, () ->  board.getTile(0,0));
+        Assertions.assertNull(board.getTile(0,0));
     }
 
     @Test
@@ -62,5 +63,21 @@ public class BoardTest {
         ArrayList<Piece> pieces = board.getTile(0, 0);
         Assertions.assertEquals(piece1, pieces.get(pieces.size() - 1));
     }
+
+    @Test
+    public void CheckIfTileHasSixNeighbours() {
+        board.setTile(piece1, 2,2);
+        board.setTile(piece2, -1,0);
+        board.setTile(piece2, 0,-1);
+        board.setTile(piece2, 1,-1);
+        board.setTile(piece2, 1,0);
+        board.setTile(piece2, 0,1);
+        board.setTile(piece2, -1,1);
+        Assertions.assertEquals(6, board.getNeighbours(0,0).size());
+    }
+
+
+
+//    is goed!
 
 }

@@ -27,8 +27,8 @@ public class Player {
     }
 
     private void addPiece(Enum type, int amount) {
-        for (int i = 0; i <= amount; i++) {
-            this.pieces.add(new Piece(type));
+        for (int i = 0; i < amount; i++) {
+            this.pieces.add(new Piece(type, colour));
         }
     }
 
@@ -39,6 +39,7 @@ public class Player {
     public Piece getPlacablePiece(Enum type) {
         for (Piece p : pieces) {
             if (p.getType() == type){
+                pieces.remove(p);
                 return p;
             }
         }
@@ -52,4 +53,20 @@ public class Player {
         return isMyTurn;
     }
 
+    public Enum getColour() {
+        return colour;
+    }
+
+    public int getHandSize() {
+        return pieces.size();
+    }
+
+    public Boolean isQueenPlayed() {
+        for (Piece piece: pieces) {
+            if (piece.getType() == Hive.Tile.QUEEN_BEE) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
