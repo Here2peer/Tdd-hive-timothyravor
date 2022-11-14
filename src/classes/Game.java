@@ -52,7 +52,42 @@ public class Game implements Hive {
      */
     @Override
     public void move(int fromQ, int fromR, int toQ, int toR) throws IllegalMove {
-        throw new IllegalMove();
+        //System.out.println(Math.abs(t1+t2) - Math.abs(t3+t4));
+
+        ArrayList<Piece> pieces = gameBoard.getTile(fromQ, fromR);
+        List<Piece> hive = new ArrayList<>();
+        Piece piece = pieces.get(pieces.size() - 1);
+
+        if(pieces.get(pieces.size() -1).getPlayer() != currentPlayer.getColour()) {
+            throw new IllegalMove("Can only move your own pieces.");
+        }
+
+        if(Boolean.FALSE.equals(currentPlayer.isQueenPlayed())) {
+            throw new IllegalMove("Queen must be played before moving a piece.");
+        }
+
+        if(isAllowedToMove((Tile) piece.getType(), fromQ, fromR, toQ, toR)) {
+            gameBoard.moveTile(fromQ, fromR, toQ, toR);
+        } else {
+            throw new IllegalMove("Move cannot be done.");
+        }
+
+
+        ArrayList<Piece> pieces2 = gameBoard.getTile(toQ, toR);
+        hive.addAll(pieces2);
+        if ((player1.getHandSize() < 10 && player2.getHandSize() < 10) && connected) {
+            if (!gameBoard.recursionRenameFunction(toQ, toR, hive, 20 - (player1.getHandSize() + player2.getHandSize()))) {
+                resetMove( fromQ,fromR,toQ,toR);
+                throw new IllegalMove("Pieces are not connected.");
+            }
+        }
+
+        if (gameBoard.getNeighbours(toQ, toR).isEmpty()) {
+            resetMove( fromQ,fromR,toQ,toR);
+            throw new IllegalMove();
+        }
+        checkHive(toQ, toR, piece);
+        switchPlayer();
     }
 
 

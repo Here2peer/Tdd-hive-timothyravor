@@ -4,7 +4,11 @@ package classes;
 public class Piece {
 
 
-    private String type;
+    private Enum type;
+    private Enum player;
+
+    private int x;
+    private int y;
 
     public Piece() {
 
