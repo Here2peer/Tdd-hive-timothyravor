@@ -11,6 +11,8 @@ public class Game implements Hive {
     private final classes.Player player1;
     private final classes.Player player2;
 
+    private boolean connected;
+
     private classes.Player currentPlayer;
 
     public Game() {
@@ -19,7 +21,7 @@ public class Game implements Hive {
         this.player1 = new classes.Player(Player.WHITE);
 
         this.currentPlayer = player1;
-
+        this.connected = false;
     }
 
     /**
@@ -35,39 +37,8 @@ public class Game implements Hive {
         Piece placablePiece = checkPlay(tile, q, r);
         this.gameBoard.setTile(placablePiece, q, r);
         this.updatePiece(q, r, placablePiece);
+        checkHive(q, r, placablePiece);
         switchPlayer();
-    }
-
-    private Piece checkPlay(Tile tile, int q, int r) throws IllegalMove {
-        ArrayList<Piece> neighbours = gameBoard.getNeighbours(q, r);
-        if (gameBoard.getTile(q, r) != null) {
-            throw new IllegalMove();
-        }
-
-
-        if (Boolean.TRUE.equals(!currentPlayer.isQueenPlayed()) && currentPlayer.getHandSize() == 7 && tile != Tile.QUEEN_BEE) {
-            throw new IllegalMove("Queen must be played.");
-        }
-
-        if (!neighbours.isEmpty()) {
-            for (Piece piece : neighbours) {
-                if (piece.getPlayer() != this.currentPlayer.getColour() && currentPlayer.getHandSize() < 10) {
-                    throw new IllegalMove("Cannot play tile next to opposite colour.");
-                }
-            }
-
-
-        } else if (currentPlayer.getHandSize() < 10) {
-            throw new IllegalMove("Must play tile next to own tile.");
-        }
-
-
-        Piece placablePiece = currentPlayer.getPlacablePiece(tile);
-        if (placablePiece == null) {
-            throw new IllegalMove("No piece of given type in your hand.");
-        }
-
-        return placablePiece;
     }
 
     /**
@@ -85,7 +56,9 @@ public class Game implements Hive {
     }
 
 
-
+    private void resetMove(int fromQ, int fromR, int toQ, int toR) throws IllegalMove {
+        gameBoard.moveTile(toQ, toR, fromQ, fromR);
+    }
 
 
 
@@ -133,7 +106,6 @@ public class Game implements Hive {
         return false;
     }
 
-
     /**
      * Check whether the game is a draw.
      *
@@ -142,6 +114,10 @@ public class Game implements Hive {
     @Override
     public boolean isDraw() {
         return isWinner(Player.BLACK) && isWinner(Player.WHITE);
+    }
+
+    public boolean isHiveConnected() {
+        return connected;
     }
 
     public classes.Player getCurrentPlayer() {
@@ -163,6 +139,123 @@ public class Game implements Hive {
     private void updatePiece(int x, int y, Piece piece) {
         piece.setX(x);
         piece.setY(y);
+    }
+
+    private Piece checkPlay(Tile tile, int q, int r) throws IllegalMove {
+        ArrayList<Piece> neighbours = gameBoard.getNeighbours(q, r);
+        if (gameBoard.getTile(q, r) != null) {
+            throw new IllegalMove();
+        }
+
+
+        if (Boolean.TRUE.equals(!currentPlayer.isQueenPlayed()) && currentPlayer.getHandSize() == 7 && tile != Tile.QUEEN_BEE) {
+            throw new IllegalMove("Queen must be played.");
+        }
+
+        if (!neighbours.isEmpty()) {
+            for (Piece piece : neighbours) {
+                if (piece.getPlayer() != this.currentPlayer.getColour() && currentPlayer.getHandSize() < 10) {
+                    throw new IllegalMove("Cannot play tile next to opposite colour.");
+                }
+            }
+
+
+        } else if (currentPlayer.getHandSize() < 10) {
+            throw new IllegalMove("Must play tile next to own tile.");
+        }
+
+
+        Piece placablePiece = currentPlayer.getPlacablePiece(tile);
+        if (placablePiece == null) {
+            throw new IllegalMove("No piece of given type in your hand.");
+        }
+
+        return placablePiece;
+    }
+
+    private void checkHive(int toQ, int toR, Piece piece) {
+        List<Piece> hive = new ArrayList<>();
+        hive.add(piece);
+        this.connected = gameBoard.recursionRenameFunction(toQ, toR, hive, 20 - (player1.getHandSize() + player2.getHandSize()));
+    }
+
+    private boolean shift(int fromX, int fromY, int toX, int toY) {
+        if(checkContinuity(fromX, fromY, toX, toY)) {
+            if (fromY == toY) {
+                //Horizontaal
+                if (toX - fromX > 0) {
+                    //Rechts
+                    if (gameBoard.getTile(fromX + 1, fromY - 1) != null && gameBoard.getTile(fromX, fromY + 1) != null) {
+                        return false;
+                    }
+                } else {
+                    //Links
+                    if (gameBoard.getTile(fromX, fromY - 1) != null && gameBoard.getTile(fromX - 1, fromY + 1) != null) {
+                        return false;
+                    }
+                }
+            } else {
+                //Diagonaal
+                if (fromX == toX) {
+                    if (Math.abs(fromY) + toY > 0) {
+                        if (gameBoard.getTile(fromX + toX, fromY) != null && gameBoard.getTile(fromX + toY, fromY + Math.abs(toY)) != null) {
+                            return false;
+                        }
+                    } else {
+                        if (gameBoard.getTile(fromX - 1, fromY) != null && gameBoard.getTile(fromX + toX, fromY - 1) != null) {
+                            return false;
+                        }
+                    }
+                } else {
+                    if (gameBoard.getTile(toX, fromY) != null && gameBoard.getTile(fromX, toY) != null) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private boolean checkContinuity(int fromX, int fromY, int toX, int toY) {
+        ArrayList<Piece> pieces1 = gameBoard.getNeighbours(fromX, fromY);
+        ArrayList<Piece> pieces2 = gameBoard.getNeighbours(toX, toY);
+
+        for(Piece piece1: pieces1) {
+            for(Piece piece2: pieces2) {
+                if(piece1.equals(piece2)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean isAllowedToMove(Tile type, int fromQ, int fromR, int toQ, int toR) {
+        final boolean oneStep = Math.abs(fromQ - toQ) <= 1 && Math.abs(fromR - toR) <= 1;
+        switch (type) {
+            case BEETLE -> {
+                return oneStep;
+            }
+            case QUEEN_BEE -> {
+                return oneStep && shift(fromQ, fromR, toQ, toR) ;
+            }
+            case SOLDIER_ANT -> {
+                //ToDo implement soldier-ant
+                return true;
+            }
+            case GRASSHOPPER -> {
+                //ToDo implement Grasshopper
+                return true;
+            }
+            case SPIDER -> {
+                //ToDo implement Spider
+                return true;
+            }
+            default -> {
+                return false;
+            }
+        }
     }
 
 }

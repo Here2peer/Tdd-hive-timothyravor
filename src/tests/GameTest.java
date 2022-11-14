@@ -177,14 +177,13 @@ public class GameTest {
     @Test
     public void MoveTileIfBeeQueenOnBoard() throws Hive.IllegalMove {
 
-        game.play(Hive.Tile.BEETLE, 0, 0); // wit
+        game.play(Hive.Tile.QUEEN_BEE, 0, 0); // wit
         game.play(Hive.Tile.BEETLE, -1, 0);
 
-        game.play(Hive.Tile.QUEEN_BEE, 1, -1); // wit
+        game.play(Hive.Tile.BEETLE, 1, -1); // wit
         game.play(Hive.Tile.BEETLE, -2, 0);
-        game.move(0,0, -1, 0);
-        Assertions.assertEquals(Hive.Tile.BEETLE, game.findPiece(Hive.Tile.BEETLE ,-1,0, Hive.Player.WHITE).getType());
-
+        game.move(0,0, 0, -1);
+        Assertions.assertEquals(Hive.Tile.QUEEN_BEE, game.findPiece(Hive.Tile.QUEEN_BEE ,0,-1, Hive.Player.WHITE).getType());
     }
     @Test
     public void MoveTileIfQueenBeeIsNotOnBoard() throws Hive.IllegalMove {
@@ -249,5 +248,235 @@ public class GameTest {
 
     }
 
+    @Test
+    public void ShiftTileBetweenLocation1() throws Hive.IllegalMove {
+        game.play(Hive.Tile.QUEEN_BEE, 0, 0);
+        game.play(Hive.Tile.QUEEN_BEE, -1, 0);
+
+        game.play(Hive.Tile.BEETLE, 0, 1);
+        game.play(Hive.Tile.BEETLE, -2, 1);
+
+        game.move(0,1, -1, 1);
+
+        Assertions.assertEquals(Hive.Tile.BEETLE,game.findPiece(Hive.Tile.BEETLE, -1, 1, Hive.Player.WHITE).getType());
+    }
+    @Test
+    public void ShiftTileBetweenLocation2() throws Hive.IllegalMove {
+        game.play(Hive.Tile.QUEEN_BEE, 1, 2);
+        game.play(Hive.Tile.QUEEN_BEE, 1, 1);
+
+        game.move(1,2, 2, 1);
+
+        Assertions.assertEquals(Hive.Tile.QUEEN_BEE ,game.findPiece(Hive.Tile.QUEEN_BEE, 2, 1, Hive.Player.WHITE).getType());
+    }
+    @Test
+    public void ShiftTileBetweenTwoPiecesWithNoRoom1() throws Hive.IllegalMove {
+        game.play(Hive.Tile.QUEEN_BEE, 0, 0);
+        game.play(Hive.Tile.QUEEN_BEE, -1, 0);
+
+        game.play(Hive.Tile.BEETLE, 0, 1);
+        game.play(Hive.Tile.BEETLE, -2, 1);
+
+
+        Assertions.assertThrows(Hive.IllegalMove.class, () -> game.move(0,0, -1, 1));
+    }
+    @Test
+    public void ShiftTileBetweenTwoPiecesWithNoRoom2() throws Hive.IllegalMove {
+        game.play(Hive.Tile.QUEEN_BEE, 1, -2);
+        game.play(Hive.Tile.QUEEN_BEE, 1, -1);
+
+        game.play(Hive.Tile.BEETLE, 0, -2);
+        game.play(Hive.Tile.BEETLE, 2, -1);
+
+
+        Assertions.assertThrows(Hive.IllegalMove.class, () -> game.move(1,-2, 0, -1));
+    }
+    @Test
+    public void ShiftTileBetweenTwoPiecesWithNoRoom3() throws Hive.IllegalMove {
+        game.play(Hive.Tile.QUEEN_BEE, 0, -1);
+        game.play(Hive.Tile.QUEEN_BEE, 1, -1);
+
+        game.play(Hive.Tile.BEETLE, 0, -2);
+        game.play(Hive.Tile.BEETLE, 2, -1);
+
+
+        Assertions.assertThrows(Hive.IllegalMove.class, () -> game.move(0,-1, 1, -2));
+    }
+    @Test
+    public void ShiftTileBetweenTwoPiecesWithNoRoom4() throws Hive.IllegalMove {
+
+        game.play(Hive.Tile.QUEEN_BEE, 1, -2);
+        game.play(Hive.Tile.QUEEN_BEE, 0, -1);
+
+        game.play(Hive.Tile.BEETLE, 2, -2);
+        game.play(Hive.Tile.BEETLE, -1, -1);
+
+        Assertions.assertThrows(Hive.IllegalMove.class, () -> game.move(1,-2, 1, -1));
+    }
+    @Test
+    public void ShiftTileBetweenTwoPiecesWithNoRoom5() throws Hive.IllegalMove {
+
+        game.play(Hive.Tile.QUEEN_BEE, 1, -1);
+        game.play(Hive.Tile.QUEEN_BEE, 0, -1);
+
+        game.play(Hive.Tile.BEETLE, 2, -2);
+        game.play(Hive.Tile.BEETLE, -1, -1);
+
+
+        Assertions.assertThrows(Hive.IllegalMove.class, () -> game.move(1,-1, 1, -2));
+    }
+    @Test
+    public void ShiftTileBetweenTwoPiecesWithNoRoom6() throws Hive.IllegalMove {
+
+        game.play(Hive.Tile.QUEEN_BEE, 0, 0);
+        game.play(Hive.Tile.QUEEN_BEE, -1, 1);
+
+        game.play(Hive.Tile.BEETLE, 0, -1);
+        game.play(Hive.Tile.BEETLE, -1, 2);
+
+
+        Assertions.assertThrows(Hive.IllegalMove.class, () -> game.move(0,0, -1, 0));
+    }
+    @Test
+    public void ShiftTileBetweenTwoPiecesWithNoRoom7() throws Hive.IllegalMove {
+
+        game.play(Hive.Tile.QUEEN_BEE, -1, 0);
+        game.play(Hive.Tile.QUEEN_BEE, -1, 1);
+
+        game.play(Hive.Tile.BEETLE, 0, -1);
+        game.play(Hive.Tile.BEETLE, -1, 2);
+
+
+        Assertions.assertThrows(Hive.IllegalMove.class, () -> game.move(-1,0, 0, 0));
+    }
+
+    @Test
+    public void MoveWhileThereAreTwoHives1() throws Hive.IllegalMove {
+
+        game.play(Hive.Tile.QUEEN_BEE, -1, 0);
+        game.play(Hive.Tile.QUEEN_BEE, 1, 0);
+
+        game.play(Hive.Tile.BEETLE, -2, 0);
+        game.play(Hive.Tile.BEETLE, 2, 0);
+
+        game.move(-2,0, -1, -1);
+
+        Assertions.assertEquals(Hive.Tile.BEETLE ,game.findPiece(Hive.Tile.BEETLE, -1, -1, Hive.Player.WHITE).getType());
+    }
+    @Test
+    public void MoveWhileThereAreTwoHives2() throws Hive.IllegalMove {
+
+        game.play(Hive.Tile.QUEEN_BEE, -1, 0);
+        game.play(Hive.Tile.QUEEN_BEE, 1, 0);
+
+        game.play(Hive.Tile.BEETLE, 0, -1);
+        game.play(Hive.Tile.BEETLE, 2, 0);
+
+        game.move(-1,0, 0, 0);
+
+        Assertions.assertTrue(game.isHiveConnected());
+    }
+    @Test
+    public void MoveWhileThereAreTwoHives3() throws Hive.IllegalMove {
+
+        game.play(Hive.Tile.QUEEN_BEE, -1, 0);
+        game.play(Hive.Tile.QUEEN_BEE, 1, 0);
+
+        game.play(Hive.Tile.BEETLE, 0, -1);
+        game.play(Hive.Tile.BEETLE, 2, 0);
+
+        game.move(-1,0, 0, 0);
+
+
+        Assertions.assertThrows(Hive.IllegalMove.class, () -> game.move(1,0, 1, -1));
+    }
+
+    @Test
+    public void ShiftWithNoBorderingPiece() throws Hive.IllegalMove {
+
+        game.play(Hive.Tile.QUEEN_BEE, 0, -1);
+        game.play(Hive.Tile.QUEEN_BEE, 1, -1);
+
+        game.play(Hive.Tile.SPIDER, -1, 0);
+        game.play(Hive.Tile.SPIDER, 1, 0);
+
+        game.play(Hive.Tile.SPIDER, -1, -1);
+        game.play(Hive.Tile.SPIDER, 0, 1);
+
+        Assertions.assertThrows(Hive.IllegalMove.class, () -> game.move(-1,0, -1, 1));
+    }
+    @Test
+    public void ShiftWithBorderingPiece() throws Hive.IllegalMove {
+
+        game.play(Hive.Tile.QUEEN_BEE, 0, -1);
+        game.play(Hive.Tile.QUEEN_BEE, 1, -1);
+
+        game.play(Hive.Tile.BEETLE, -1, 0);
+        game.play(Hive.Tile.BEETLE, 1, 0);
+
+        game.play(Hive.Tile.BEETLE, -1, -1);
+        game.play(Hive.Tile.BEETLE, 0, 1);
+
+        game.move(-1,0, 0, 0);
+        game.play(Hive.Tile.SPIDER, 2, 0);
+
+        game.move(-1,-1, -1, 0);
+        game.play(Hive.Tile.SPIDER, 3, 0);
+
+        game.move(-1,0, -1, 1);
+
+        Assertions.assertEquals(Hive.Tile.BEETLE ,game.findPiece(Hive.Tile.BEETLE, -1, 1, Hive.Player.WHITE).getType());
+
+    }
+
+    @Test
+    public void BeetleCannotMoveTwoPieces() throws Hive.IllegalMove {
+        game.play(Hive.Tile.QUEEN_BEE, 0, -1);
+        game.play(Hive.Tile.QUEEN_BEE, 1, -1);
+
+        game.play(Hive.Tile.BEETLE, -1, 0);
+        game.play(Hive.Tile.BEETLE, 1, 0);
+        Assertions.assertThrows(Hive.IllegalMove.class, () -> game.move(-1,0, 0, -2));
+    }
+    @Test
+    public void BeetleCanMoveOneSpace() throws Hive.IllegalMove {
+        game.play(Hive.Tile.QUEEN_BEE, 0, -1);
+        game.play(Hive.Tile.QUEEN_BEE, 1, -1);
+
+        game.play(Hive.Tile.BEETLE, -1, 0);
+        game.play(Hive.Tile.BEETLE, 1, 0);
+
+        game.move(-1,0, -1, -1);
+
+        Assertions.assertEquals(Hive.Tile.BEETLE ,game.findPiece(Hive.Tile.BEETLE, -1, -1, Hive.Player.WHITE).getType());
+    }
+    @Test
+    public void BeetleCanMoveOneSpaceOnTopOfOtherPiece() throws Hive.IllegalMove {
+        game.play(Hive.Tile.QUEEN_BEE, 0, -1);
+        game.play(Hive.Tile.QUEEN_BEE, 1, -1);
+
+        game.play(Hive.Tile.BEETLE, -1, 0);
+        game.play(Hive.Tile.BEETLE, 1, 0);
+
+        game.move(-1, 0, 0, -1);
+
+        Assertions.assertEquals(Hive.Tile.BEETLE ,game.findPiece(Hive.Tile.BEETLE, 0, -1, Hive.Player.WHITE).getType());
+    }
+
+    @Test
+    public void QueenBeeCanMoveOneSpace() throws Hive.IllegalMove {
+        game.play(Hive.Tile.QUEEN_BEE, 0, -1);
+        game.play(Hive.Tile.QUEEN_BEE, 1, -1);
+
+        game.move(0,-1, 1, -2);
+        Assertions.assertEquals(Hive.Tile.QUEEN_BEE ,game.findPiece(Hive.Tile.QUEEN_BEE, 1, -2, Hive.Player.WHITE).getType());
+    }
+    @Test
+    public void QueenBeeCannotMoveOnTop() throws Hive.IllegalMove {
+        game.play(Hive.Tile.QUEEN_BEE, 0, -1);
+        game.play(Hive.Tile.QUEEN_BEE, 1, -1);
+
+        Assertions.assertThrows(Hive.IllegalMove.class, () -> game.move(0,-1, 1, -1));
+    }
 
 }
