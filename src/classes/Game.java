@@ -237,7 +237,7 @@ public class Game implements Hive {
                             return false;
                         }
                     } else {
-                        if (gameBoard.getTile(fromX - 1, fromY) != null && gameBoard.getTile(fromX + toX, fromY - 1) != null) {
+                        if (gameBoard.getTile(fromX - 1, fromY) != null && gameBoard.getTile(fromX + 1, fromY - 1) != null) {
                             return false;
                         }
                     }
@@ -285,7 +285,7 @@ public class Game implements Hive {
             }
             case SPIDER -> {
                 //ToDo implement Spider
-                return true;
+                return shift(fromQ, fromR, toQ, toR);
             }
             default -> {
                 return false;
