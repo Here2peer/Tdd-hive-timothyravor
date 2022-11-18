@@ -409,11 +409,11 @@ public class GameTest {
         game.play(Hive.Tile.QUEEN_BEE, 0, -1);
         game.play(Hive.Tile.QUEEN_BEE, 1, -1);
 
-        game.play(Hive.Tile.SPIDER, -1, 0);
-        game.play(Hive.Tile.SPIDER, 1, 0);
+        game.play(Hive.Tile.BEETLE, -1, 0);
+        game.play(Hive.Tile.BEETLE, 1, 0);
 
-        game.play(Hive.Tile.SPIDER, -1, -1);
-        game.play(Hive.Tile.SPIDER, 0, 1);
+        game.play(Hive.Tile.BEETLE, -1, -1);
+        game.play(Hive.Tile.BEETLE, 0, 1);
 
         Assertions.assertThrows(Hive.IllegalMove.class, () -> game.move(-1,0, -1, 1));
     }
@@ -490,5 +490,146 @@ public class GameTest {
 
         Assertions.assertThrows(Hive.IllegalMove.class, () -> game.move(0,-1, 1, -1));
     }
+
+    @Test
+    public void SoldierAntCanMoveUnlimitedTiles() throws Hive.IllegalMove {
+        game.play(Hive.Tile.QUEEN_BEE, 0, 0);
+        game.play(Hive.Tile.QUEEN_BEE, -1, 0);
+
+        game.play(Hive.Tile.SOLDIER_ANT, 1, 0);
+        game.play(Hive.Tile.BEETLE, -2, 0);
+
+        game.move(1,0, -3, 0);
+        Assertions.assertEquals(Hive.Tile.SOLDIER_ANT ,game.findPiece(Hive.Tile.SOLDIER_ANT, -3, 0, Hive.Player.WHITE).getType());
+    }
+    @Test
+    public void SoldierAntCanMoveUnlimitedTilesNotAllowed() throws Hive.IllegalMove {
+        game.play(Hive.Tile.QUEEN_BEE, 1, 0);
+        game.play(Hive.Tile.QUEEN_BEE, 0, 2);
+
+        game.play(Hive.Tile.SOLDIER_ANT, 2, 0);
+        game.play(Hive.Tile.BEETLE, -1, 2);
+
+        game.play(Hive.Tile.SOLDIER_ANT, 2, 1);
+        game.play(Hive.Tile.BEETLE, -1, 1);
+
+        game.move(2,1, 1, 1);
+        game.play(Hive.Tile.GRASSHOPPER, -1, 0);
+
+        game.play(Hive.Tile.GRASSHOPPER, 1, -1);
+        game.play(Hive.Tile.GRASSHOPPER, -2, 0);
+
+        Assertions.assertThrows(Hive.IllegalMove.class, () -> game.move(1,1, 0, 0));
+    }
+    @Test
+    public void GrasshopperCanJumpOverPieces1() throws Hive.IllegalMove {
+        game.play(Hive.Tile.QUEEN_BEE, -1, 0);
+        game.play(Hive.Tile.QUEEN_BEE, 0, 0);
+
+        game.play(Hive.Tile.SOLDIER_ANT, -2, 0);
+        game.play(Hive.Tile.BEETLE, 1, 0);
+
+        game.play(Hive.Tile.GRASSHOPPER, -3, 0);
+        game.play(Hive.Tile.BEETLE, 0, 1);
+
+        game.move(-3,0, 2, 0);
+
+        Assertions.assertEquals(Hive.Tile.GRASSHOPPER ,game.findPiece(Hive.Tile.GRASSHOPPER, 2, 0, Hive.Player.WHITE).getType());
+    }
+    @Test
+    public void GrasshopperCanJumpOverPieces2() throws Hive.IllegalMove {
+        game.play(Hive.Tile.QUEEN_BEE, -1, 0);
+        game.play(Hive.Tile.QUEEN_BEE, 0, 0);
+
+        game.play(Hive.Tile.SOLDIER_ANT, -2, 0);
+        game.play(Hive.Tile.GRASSHOPPER, 1, 0);
+
+        game.play(Hive.Tile.GRASSHOPPER, -3, 0);
+        game.play(Hive.Tile.GRASSHOPPER, 0, 1);
+
+        game.play(Hive.Tile.BEETLE, -2, 1);
+        game.move(1,0, -4, 0);
+
+        Assertions.assertEquals(Hive.Tile.GRASSHOPPER ,game.findPiece(Hive.Tile.GRASSHOPPER, -4, 0, Hive.Player.BLACK).getType());
+    }
+    @Test
+    public void GrasshopperCanJumpOverPieces3() throws Hive.IllegalMove {
+        game.play(Hive.Tile.QUEEN_BEE, -1, 0);
+        game.play(Hive.Tile.QUEEN_BEE, 0, -1);
+
+        game.play(Hive.Tile.SOLDIER_ANT, -2, 1);
+        game.play(Hive.Tile.BEETLE, 1, -2);
+
+        game.play(Hive.Tile.GRASSHOPPER, -3, 2);
+        game.play(Hive.Tile.BEETLE, 2, -3);
+        game.move(-3,2, 3, -4);
+
+        Assertions.assertEquals(Hive.Tile.GRASSHOPPER ,game.findPiece(Hive.Tile.GRASSHOPPER, 3, -4, Hive.Player.WHITE).getType());
+   }
+   @Test
+    public void GrasshopperCanJumpOverPieces4() throws Hive.IllegalMove {
+        game.play(Hive.Tile.QUEEN_BEE, -1, 0);
+        game.play(Hive.Tile.QUEEN_BEE, 0, -1);
+
+        game.play(Hive.Tile.SOLDIER_ANT, -2, 1);
+        game.play(Hive.Tile.BEETLE, 1, -2);
+
+        game.play(Hive.Tile.GRASSHOPPER, -3, 2);
+        game.play(Hive.Tile.GRASSHOPPER, 2, -3);
+
+
+       game.play(Hive.Tile.GRASSHOPPER, -1, 1);
+       game.move(2,-3, -4, 3);
+
+        Assertions.assertEquals(Hive.Tile.GRASSHOPPER ,game.findPiece(Hive.Tile.GRASSHOPPER, -4, 3, Hive.Player.BLACK).getType());
+   }
+   @Test
+    public void GrasshopperCanJumpOverPieces5() throws Hive.IllegalMove {
+        game.play(Hive.Tile.QUEEN_BEE, 0, -1);
+        game.play(Hive.Tile.QUEEN_BEE, 0, 0);
+
+        game.play(Hive.Tile.SOLDIER_ANT, 0, -2);
+        game.play(Hive.Tile.BEETLE, 0, 1);
+
+        game.play(Hive.Tile.GRASSHOPPER, 0, -3);
+        game.play(Hive.Tile.GRASSHOPPER, 0, 2);
+
+        game.move(0,-3, 0, 3);
+
+        Assertions.assertEquals(Hive.Tile.GRASSHOPPER ,game.findPiece(Hive.Tile.GRASSHOPPER, 0, 3, Hive.Player.WHITE).getType());
+   }
+   @Test
+    public void GrasshopperCanJumpOverPieces6() throws Hive.IllegalMove {
+        game.play(Hive.Tile.QUEEN_BEE, 0, -1);
+        game.play(Hive.Tile.QUEEN_BEE, 0, 0);
+
+        game.play(Hive.Tile.SOLDIER_ANT, 0, -2);
+        game.play(Hive.Tile.BEETLE, 0, 1);
+
+        game.play(Hive.Tile.GRASSHOPPER, 0, -3);
+        game.play(Hive.Tile.GRASSHOPPER, 0, 2);
+
+
+        game.play(Hive.Tile.BEETLE, 1, -2);
+        game.move(0,2, 0, -4);
+
+        Assertions.assertEquals(Hive.Tile.GRASSHOPPER ,game.findPiece(Hive.Tile.GRASSHOPPER, 0, -4, Hive.Player.BLACK).getType());
+   }
+
+   @Test
+    public void GrasshopperCanJumpOverPiecesNotAllowed() throws Hive.IllegalMove {
+        game.play(Hive.Tile.QUEEN_BEE, -1, 0);
+        game.play(Hive.Tile.QUEEN_BEE, 0, -1);
+
+        game.play(Hive.Tile.SOLDIER_ANT, -2, 1);
+        game.play(Hive.Tile.BEETLE, 1, -2);
+
+        game.play(Hive.Tile.GRASSHOPPER, -3, 2);
+        game.play(Hive.Tile.BEETLE, 2, -3);
+
+
+        Assertions.assertThrows(Hive.IllegalMove.class, () -> game.move(-3,2, 2, -2));
+   }
+
 
 }

@@ -52,7 +52,6 @@ public class Game implements Hive {
      */
     @Override
     public void move(int fromQ, int fromR, int toQ, int toR) throws IllegalMove {
-        //System.out.println(Math.abs(t1+t2) - Math.abs(t3+t4));
 
         ArrayList<Piece> pieces = gameBoard.getTile(fromQ, fromR);
         List<Piece> hive = new ArrayList<>();
@@ -253,24 +252,39 @@ public class Game implements Hive {
     }
 
     private boolean checkContinuity(int fromX, int fromY, int toX, int toY) {
+        ArrayList<Piece> pieces = gameBoard.getTile(fromX, fromY);
         ArrayList<Piece> pieces1 = gameBoard.getNeighbours(fromX, fromY);
         ArrayList<Piece> pieces2 = gameBoard.getNeighbours(toX, toY);
+        Piece piece = pieces.get(pieces.size() - 1);
 
-        for(Piece piece1: pieces1) {
-            for(Piece piece2: pieces2) {
-                if(piece1.equals(piece2)) {
-                    return true;
-                }
-            }
+        if (piece.getType() == Tile.BEETLE && gameBoard.getTile(toX, toY) != null) {
+            return true;
         }
-        return false;
+
+        if (piece.getType() == Tile.BEETLE || piece.getType() == Tile.QUEEN_BEE) {
+                for (Piece piece1 : pieces1) {
+                    for (Piece piece2 : pieces2) {
+                        if (piece1.equals(piece2)) {
+                            return true;
+                        }
+                    }
+                }
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
+    private boolean isSameLocation(int fromQ, int fromR, int toQ, int toR) {
+        return !(fromQ == fromR && toQ == toR);
     }
 
     private boolean isAllowedToMove(Tile type, int fromQ, int fromR, int toQ, int toR) {
         final boolean oneStep = Math.abs(fromQ - toQ) <= 1 && Math.abs(fromR - toR) <= 1;
         switch (type) {
             case BEETLE -> {
-                return oneStep;
+                return oneStep && shift(fromQ, fromR, toQ, toR);
             }
             case QUEEN_BEE -> {
                 return oneStep && shift(fromQ, fromR, toQ, toR) ;
@@ -280,17 +294,68 @@ public class Game implements Hive {
                 return true;
             }
             case GRASSHOPPER -> {
-                //ToDo implement Grasshopper
-                return true;
+                return grasshopperCheck(fromQ, fromR, toQ, toR);
             }
             case SPIDER -> {
                 //ToDo implement Spider
-                return shift(fromQ, fromR, toQ, toR);
+
+                //System.out.println(Math.abs(t1+t2) - Math.abs(t3+t4));
+                return isSameLocation(fromQ, fromR, toQ, toR) && shift(fromQ, fromR, toQ, toR);
             }
             default -> {
                 return false;
             }
         }
+    }
+
+    private boolean grasshopperCheck(int fromQ, int fromR, int toQ, int toR) {
+        int offset = Math.abs(fromQ + fromR);
+        int moveCount;
+
+        if(fromQ == toQ && fromR != toR) {
+            moveCount = calculateMoveCount(fromR, toR);
+        } else {
+            moveCount = calculateMoveCount(fromQ, toQ);
+        }
+
+        for (int x = 0; x < moveCount; ++x) {
+            if (fromQ != toQ && fromR == toR) {
+                if(gameBoard.getTile(fromQ + x, fromR) == null && fromQ < toQ) {
+                    return false;
+                }
+                if(gameBoard.getTile(fromQ - x, fromR) == null && fromQ > toQ) {
+                    return false;
+                }
+            }
+
+            if(fromQ == toQ && fromR != toR) {
+                if(gameBoard.getTile(fromQ, fromR - x) == null && fromR > toR) {
+                    return false;
+                }
+                if(gameBoard.getTile(fromQ, fromR + x) == null && fromR < toR) {
+                    return false;
+                }
+            }
+
+            if((fromQ != toQ && fromR != toR)) {
+                if (toQ + toR + offset == 0) {
+                    if (gameBoard.getTile(fromQ + x, fromR - x) == null && fromQ < toQ) {
+                        return false;
+                    }
+                    if (gameBoard.getTile(fromQ - x, fromR + x) == null && fromQ > toQ) {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            }
+        }
+        return true;
+
+    }
+
+    private int calculateMoveCount(int moveX, int moveY) {
+        return Math.abs(moveX - moveY);
     }
 
 }
