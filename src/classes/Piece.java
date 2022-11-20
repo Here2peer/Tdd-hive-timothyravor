@@ -1,11 +1,13 @@
 package classes;
 
 
+import interfaces.Hive;
+
 public class Piece {
 
 
     private Enum type;
-    private Enum player;
+    private Hive.Player player;
 
     private int x;
     private int y;
@@ -13,8 +15,12 @@ public class Piece {
     public Piece() {
 
     }
+    public Piece(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
 
-    public Piece(Enum type, Enum player) {
+    public Piece(Enum type, Hive.Player player) {
         this.type = type;
         this.player = player;
     }

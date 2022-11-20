@@ -10,14 +10,14 @@ public class Player {
     private boolean isMyTurn;
     private ArrayList<Piece> pieces;
 
-    private final Enum colour;
+    private final Hive.Player colour;
 
-    public Player(Enum colour) {
+    public Player(Hive.Player colour) {
 
         this.colour = colour;
         this.pieces = new ArrayList<>();
 
-        isMyTurn = Objects.equals(colour.toString(), "WHITE");
+        isMyTurn = Objects.equals(colour, Hive.Player.WHITE);
 
         addPiece(Hive.Tile.QUEEN_BEE, 1);
         addPiece(Hive.Tile.SPIDER, 2);
@@ -26,7 +26,7 @@ public class Player {
         addPiece(Hive.Tile.GRASSHOPPER, 3);
     }
 
-    private void addPiece(Enum type, int amount) {
+    private void addPiece(Hive.Tile type, int amount) {
         for (int i = 0; i < amount; i++) {
             this.pieces.add(new Piece(type, colour));
         }
@@ -36,7 +36,7 @@ public class Player {
         return isMyTurn;
     }
 
-    public Piece getPlacablePiece(Enum type) {
+    public Piece getPlacablePiece(Hive.Tile type) {
         for (Piece p : pieces) {
             if (p.getType() == type){
                 pieces.remove(p);
@@ -53,7 +53,7 @@ public class Player {
         return isMyTurn;
     }
 
-    public Enum getColour() {
+    public Hive.Player getColour() {
         return colour;
     }
 

@@ -627,9 +627,24 @@ public class GameTest {
         game.play(Hive.Tile.GRASSHOPPER, -3, 2);
         game.play(Hive.Tile.BEETLE, 2, -3);
 
-
         Assertions.assertThrows(Hive.IllegalMove.class, () -> game.move(-3,2, 2, -2));
    }
 
+   @Test
+    public void SpiderCanMoveOnlyThreeSpaces() throws Hive.IllegalMove {
+       game.play(Hive.Tile.QUEEN_BEE, -1, 0);
+       game.play(Hive.Tile.QUEEN_BEE, 0, -1);
+
+       game.play(Hive.Tile.SPIDER, -2, 1);
+       game.play(Hive.Tile.BEETLE, 1, -2);
+
+       game.play(Hive.Tile.SPIDER, -1, 1);
+       game.play(Hive.Tile.BEETLE, 1, -1);
+
+       game.move(-2 , 1, 0, 1);
+
+       Assertions.assertEquals(Hive.Tile.SPIDER ,game.findPiece(Hive.Tile.SPIDER, 0, 1, Hive.Player.WHITE).getType());
+
+   }
 
 }
