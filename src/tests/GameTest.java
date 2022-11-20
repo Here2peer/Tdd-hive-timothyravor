@@ -646,32 +646,31 @@ public class GameTest {
        Assertions.assertEquals(Hive.Tile.SPIDER ,game.findPiece(Hive.Tile.SPIDER, 0, 1, Hive.Player.WHITE).getType());
 
    }
-
-   @Test
-    public void WhiteCannotMoveOrPlaySoPasses() throws Hive.IllegalMove {
-       game.play(Hive.Tile.QUEEN_BEE, 0, -10);
-       game.play(Hive.Tile.QUEEN_BEE, 0, -9);
-       game.play(Hive.Tile.SPIDER, 0, -8);
-       game.play(Hive.Tile.SPIDER, 0, -7);
-       game.play(Hive.Tile.SPIDER, 0, -6);
-       game.play(Hive.Tile.SPIDER, 0, -5);
-       game.play(Hive.Tile.SOLDIER_ANT, 0, -4);
-       game.play(Hive.Tile.SOLDIER_ANT, 0, -3);
-       game.play(Hive.Tile.SOLDIER_ANT, 0, -2);
-       game.play(Hive.Tile.SOLDIER_ANT, 0, -1);
-
-       game.play(Hive.Tile.BEETLE, 0, 0);
-       game.play(Hive.Tile.BEETLE, 0, 1);
-       game.play(Hive.Tile.BEETLE, 0, 2);
-       game.play(Hive.Tile.BEETLE, 0, 3);
-       game.play(Hive.Tile.GRASSHOPPER, 0, 4);
-       game.play(Hive.Tile.GRASSHOPPER, 0, 5);
-       game.play(Hive.Tile.GRASSHOPPER, 0, 6);
-       game.play(Hive.Tile.GRASSHOPPER, 0, 7);
-       game.play(Hive.Tile.GRASSHOPPER, 0, 8);
-       game.play(Hive.Tile.GRASSHOPPER, 0, 9);
-
-       Assertions.assertThrows(Hive.IllegalMove.class, () -> game.move(0,8, 0, 10));
-   }
+//   @Test
+//    public void WhiteCannotMoveOrPlaySoPasses() throws Hive.IllegalMove {
+//       game.play(Hive.Tile.QUEEN_BEE, 0, -10);
+//       game.play(Hive.Tile.QUEEN_BEE, 0, -9);
+//       game.play(Hive.Tile.SPIDER, 0, -8);
+//       game.play(Hive.Tile.SPIDER, 0, -7);
+//       game.play(Hive.Tile.SPIDER, 0, -6);
+//       game.play(Hive.Tile.SPIDER, 0, -5);
+//       game.play(Hive.Tile.SOLDIER_ANT, 0, -4);
+//       game.play(Hive.Tile.SOLDIER_ANT, 0, -3);
+//       game.play(Hive.Tile.SOLDIER_ANT, 0, -2);
+//       game.play(Hive.Tile.SOLDIER_ANT, 0, -1);
+//
+//       game.play(Hive.Tile.BEETLE, 0, 0);
+//       game.play(Hive.Tile.BEETLE, 0, 1);
+//       game.play(Hive.Tile.BEETLE, 0, 2);
+//       game.play(Hive.Tile.BEETLE, 0, 3);
+//       game.play(Hive.Tile.GRASSHOPPER, 0, 4);
+//       game.play(Hive.Tile.GRASSHOPPER, 0, 5);
+//       game.play(Hive.Tile.GRASSHOPPER, 0, 6);
+//       game.play(Hive.Tile.GRASSHOPPER, 0, 7);
+//       game.play(Hive.Tile.GRASSHOPPER, 0, 8);
+//       game.play(Hive.Tile.GRASSHOPPER, 0, 9);
+//
+//       Assertions.assertThrows(Hive.IllegalMove.class, () -> game.move(0,8, 0, 10));
+//   }
 
 }
