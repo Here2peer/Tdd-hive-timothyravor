@@ -172,4 +172,5 @@ public class Game implements Hive {
             currentPlayer = player1;
         }
     }
+
 }
