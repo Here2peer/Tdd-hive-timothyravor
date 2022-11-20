@@ -647,4 +647,9 @@ public class GameTest {
 
    }
 
+   @Test
+    public void WhiteCannotMoveOrPlaySoPasses() {
+
+   }
+
 }
